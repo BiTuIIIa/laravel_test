@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\PostTag;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
     public function index()
     {
+
 
         $posts = Post::all();
         return view('post.index', ['posts' => $posts]);
@@ -18,7 +22,9 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('post.create');
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('post.create', ['categories' => $categories, 'tags' => $tags]);
     }
 
     public function store()
@@ -26,12 +32,21 @@ class PostController extends Controller
 
         $data = request()->validate([
 
-                'title' => 'string',
+                'title' => 'required|string',
                 'content' => 'string',
                 'image' => 'string',
+                'category_id' => '',
+                'tags' => '',
             ]
         );
-        Post::create($data);
+        $tags = $data['tags'];
+        unset($data['tags']);
+
+        $post = Post::create($data);
+
+        $post->tags()->attach($tags,['created_at' => new \DateTime('now')]);
+
+
         return redirect()->route('post.index');
     }
 
@@ -43,7 +58,9 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        return view('post.edit', ['post' => $post]);
+        $categories = Category::all();
+        $tags = Tag::all();
+        return view('post.edit', ['post' => $post, 'categories' => $categories,'tags' => $tags]);
     }
 
     public function update(Post $post)
@@ -54,9 +71,17 @@ class PostController extends Controller
                 'title' => 'string',
                 'content' => 'string',
                 'image' => 'string',
+                'category_id' => '',
+                'tags' => '',
             ]
         );
+
+        $tags = $data['tags'];
+        unset($data['tags']);
+
         $post->update($data);
+        $post->tags()->sync($tags);
+
         return redirect()->route('post.show', $post->id);
 
     }
