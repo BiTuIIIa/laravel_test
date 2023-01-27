@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',[\App\Http\Controllers\HomeController::class,'index'])->name('homee');
 
 Route::group(['namespace'=>'App\Http\Controllers\Post'],function (){
 
@@ -30,7 +28,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Post'],function (){
 
 
 Route::group(['namespace'=>'App\Http\Controllers\Admin'],function (){
-    Route::group(['namespace'=>'App\Http\Controllers\Post', 'prefix'=>'admin'],function (){
+    Route::group(['namespace'=>'App\Http\Controllers\Post', 'prefix'=>'admin','middleware' => 'admin'],function (){
         Route::get('/post',[\App\Http\Controllers\Admin\Post\IndexController::class,'__invoke'])->name('admin.post.index');
         Route::get('/posts/create', [\App\Http\Controllers\Admin\Post\CreateController::class,'__invoke'])->name('admin.post.create');
         Route::post('/posts',[\App\Http\Controllers\Admin\Post\StoreController::class,'__invoke'])->name('admin.post.store');
@@ -41,3 +39,11 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin'],function (){
     });
 
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
