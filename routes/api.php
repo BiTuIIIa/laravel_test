@@ -34,4 +34,10 @@ Route::group([
 
 Route::group(['namespace' => 'Post', 'middleware' => 'jwt.auth'],function (){
     Route::get('/posts',[\App\Http\Controllers\Post\IndexController::class,'__invoke']);
+    Route::get('/posts/create', [\App\Http\Controllers\Post\CreateController::class,'__invoke']);
+    Route::post('/posts',[\App\Http\Controllers\Post\StoreController::class,'__invoke']);
+    Route::get('/posts/{post}',[\App\Http\Controllers\Post\ShowController::class,'__invoke']);
+    Route::get('/posts/{post}/edit',[\App\Http\Controllers\Post\EditController::class,'__invoke']);
+    Route::patch('/posts/{post}',[\App\Http\Controllers\Post\UpdateController::class,'__invoke']);
+    Route::delete('/posts/{post}',[\App\Http\Controllers\Post\DestroyController::class,'__invoke']);
 });
