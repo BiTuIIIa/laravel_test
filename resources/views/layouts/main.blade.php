@@ -19,6 +19,11 @@
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
+                        @can('view',auth()->user())
+                            <li class="nav-item">
+                                <a class="nav-link active " href="{{route('admin.post.index')}}">Admin</a>
+                            </li>
+                        @endcan
                         <li class="nav-item">
                             <a class="nav-link" href="">Home</a>
                         </li>
