@@ -19,6 +19,8 @@ Route::get('/', function () {
 
 Route::group(['namespace'=>'App\Http\Controllers\Post'],function (){
 
+    Route::get('/admin',[\App\Http\Controllers\Admin\Post\IndexController::class,'__invoke']);
+
     Route::get('/posts', [\App\Http\Controllers\Post\IndexController::class,'__invoke'])->name('post.index');
     Route::get('/posts/create', [\App\Http\Controllers\Post\CreateController::class,'__invoke'])->name('post.create');
     Route::post('/posts',[\App\Http\Controllers\Post\StoreController::class,'__invoke'])->name('post.store');
@@ -29,4 +31,9 @@ Route::group(['namespace'=>'App\Http\Controllers\Post'],function (){
 });
 
 
+Route::group(['namespace'=>'App\Http\Controllers\Admin'],function (){
+    Route::group(['namespace'=>'App\Http\Controllers\Post', 'prefix'=>'admin'],function (){
+        Route::get('/post',[\App\Http\Controllers\Admin\Post\IndexController::class,'__invoke'])->name('admin.post.index');
+    });
 
+});
